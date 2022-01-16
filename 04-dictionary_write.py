@@ -9,9 +9,6 @@ def sha1_500(plain_text):
 SALT = 'salt_for_you'   
 fd = open("dictionary.txt",'w')
 
-
-def reduce_function(encrypt_text):
-
 for number in tqdm(range(10000000,20000000)):
     try:
         plain_text = str(number) + SALT
