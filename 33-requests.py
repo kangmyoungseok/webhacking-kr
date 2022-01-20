@@ -7,6 +7,13 @@ import re
 BASE_URL = "https://webhacking.kr/challenge/bonus-6/"
 LINK_RE = '[a-z0-9]+\.php'
 
+def find_my_ip():
+    find_ip_url = 'https://ip.pe.kr/'
+    response = requests.get(find_ip_url)
+    reg_filter = '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
+    my_ip = re.search(reg_filter,response.text).group()
+    return my_ip
+
 #로그인
 def login(session):
     datas = {}
@@ -156,7 +163,7 @@ def main():
     session = requests.session()
     login(session)
     global ip
-    ip = input("자신의 공인 IP 입력: ")
+    ip = find_my_ip()
     next_link = solve_1(session)
     next_link = solve_2(session,next_link)
     next_link = solve_3(session,next_link)
