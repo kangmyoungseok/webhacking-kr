@@ -1,4 +1,5 @@
 import base64
+from urllib import parse
 
 name = 'myoungseok'          # 1. 문자열
 name_bytes = name .encode('ascii')  # 2. bytes형 변환
@@ -75,7 +76,7 @@ def base64_encode_20(string):
 
     for i in range(20):
         string_base64 = base64.b64encode(string_base64)
-        print(string_base64)
+        #print(string_base64)
 
     string_base64_20_str = string_base64.decode('ascii')
 
