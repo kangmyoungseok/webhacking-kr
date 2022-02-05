@@ -140,24 +140,23 @@ def solve_10(session,next_link):
     url = BASE_URL + next_link
 
     session.get(url)
-    # 중간에 길이가 바뀌네 ,,,, ㅠ
     my_ip = ip
 
     i = 0
     while(len(my_ip) > i):
         my_ip = my_ip.replace(str(i),str(ord(str(i)[0])))
         i +=1
-
     my_ip = my_ip.replace('.','')
     my_ip = my_ip[0:10]
     answer = int(my_ip) *2
-    answer = int(my_ip) /2
+    # php는 4/2가 2이고, python은 2.0이다.
+    answer = int(int(my_ip) /2) if int(my_ip) %2 == 0 else int(my_ip) / 2
     answer = str(answer).replace(".","")
-    answer
     flag_path  = url[:-11]+ '/answerip/{}_{}.php'.format(answer,my_ip)
     response = session.get(flag_path)
 
     print(response.text)
+
 
 def main():
     session = requests.session()
