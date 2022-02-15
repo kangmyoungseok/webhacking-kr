@@ -25,8 +25,8 @@ for i in range(1,password_length+1):
         response = requests.get(url,params=params)
         if(TRUE_FLAG in response.text):
             flag += character
-            print('[+]',i,character)
+            print('\r[+]',i,flag,end='')
             break
+    print()
 
 print(flag)
-
